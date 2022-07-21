@@ -3,20 +3,14 @@ import { useFonts, Roboto_400Regular, Roboto_700Bold} from '@expo-google-fonts/r
 
 import { THEME } from './src/styles/theme';
 
-import { Register } from "./src/screens/Register";
-import { Loading } from './src/components/Loading';
+import { AppRoutes } from "./src/routes/app.routes";
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
 
   return (
     <NativeBaseProvider theme={THEME}>
-      <StatusBar 
-      barStyle="light-content" 
-      backgroundColor="transparent"
-      translucent
-       />
-      { fontsLoaded ? <Register /> : <Loading /> }
+      <AppRoutes />
     </NativeBaseProvider>
   );
 }
