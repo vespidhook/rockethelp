@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Heading, HStack, IconButton, Text, useTheme, VStack, FlatList, Center } from 'native-base';
+import { useNavigation } from '@react-navigation/native';
+import { Heading, HStack, IconButton, Text as NativeBaseText, useTheme, VStack, FlatList, Center } from 'native-base';
 import { ChatTeardropText, SignOut } from 'phosphor-react-native';
 
 import Logo from '../assets/logo_secondary.svg';
@@ -10,9 +11,38 @@ import { Order, OrderProps } from '../components/Order';
 
 export function Home() {
     const [statusSelected, setStatusSelected] = useState<'open' | 'closed'>('open');
-    const [orders, setOrders] = useState<OrderProps[]>([]);
+    const [orders, setOrders] = useState<OrderProps[]>([
+        {
+            id: '1',
+            patrimony: '123456',
+            when: '2020-01-01',
+            status: 'open',
+        },
+        {
+            id: '2',
+            patrimony: '123456',
+            when: '2020-01-01',
+            status: 'open',
+        },
+        {
+            id: '3',
+            patrimony: '123456',
+            when: '2020-01-01',
+            status: 'open',
+        },
 
+    ]);
+
+    const navigation = useNavigation();
     const { colors } = useTheme();
+
+    function handleNewOrder() {
+        navigation.navigate('new');
+    }
+
+    function handleOpenDetails(orderId: string) {
+        navigation.navigate('details', { orderId });
+    }
 
   return (
     <VStack flex={1} pb={6} bg="gray.700">
@@ -36,12 +66,12 @@ export function Home() {
         <VStack flex={1} px={6}>
             <HStack w="full" mt={8} mb={4} justifyContent="space-between" alignItems="center">
                 <Heading color="gray.100">
-                    Meus chamados
+                    Solicitações
                 </Heading>
 
-                <Text color="gray.200">
-                    3
-                </Text>
+                <NativeBaseText color="gray.200">
+                    {orders.length}
+                </NativeBaseText>
             </HStack>
 
             <HStack space={3} mb={8}>
@@ -63,21 +93,21 @@ export function Home() {
             <FlatList 
                 data={orders}
                 keyExtractor={item => item.id}
-                renderItem={({ item }) => <Order data={item} /> }
+                renderItem={({ item }) => <Order data={item} onPress={() => handleOpenDetails(item.id)} /> }
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 50 }}
                 ListEmptyComponent={() => (
                     <Center>
                         <ChatTeardropText color={colors.gray[300]} size={40} />
-                        <Text color="gray.300" fontSize="xl" mt={6} textAlign="center">
+                        <NativeBaseText color="gray.300" fontSize="xl" mt={6} textAlign="center">
                             Você ainda não possui {'\n'}
                             solicitações {statusSelected === 'open' ? 'em andamento' : 'finalizados'}
-                        </Text>
+                        </NativeBaseText>
                     </Center>                
                 )}
             />
 
-            <Button title="Nova solicitação" />
+            <Button title="Nova solicitação" onPress={handleNewOrder} />
         </VStack>
     </VStack>
   );
